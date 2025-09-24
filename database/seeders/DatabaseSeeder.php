@@ -15,5 +15,6 @@ class DatabaseSeeder extends Seeder
     {
         // Ensure our application seed order: data karyawan -> users
         $this->call(AdminUserSeeder::class);
+        $this->call(SampleDataSeeder::class);
     }
 }
