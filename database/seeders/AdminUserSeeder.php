@@ -23,8 +23,8 @@ class AdminUserSeeder extends Seeder
 
         DB::table('tb_user')->insert([
             'id_karyawan' => $idKaryawan,
-            'username' => 'admin',
-            'password' => Hash::make('password'),
+            'username' => 'superadmin',
+            'password' => Hash::make('superadmin'),
             'peran' => 'superadmin',
             'created_at' => now(),
             'updated_at' => now(),

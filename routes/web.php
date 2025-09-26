@@ -5,11 +5,13 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DataKaryawanController;
 use App\Http\Controllers\DokumenController;
+use App\Http\Controllers\KehadiranController;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+// Route::get('/', function () {
+//     return view('welcome');
+// });
 
+Route::get('/', [LoginController::class, 'showLogin'])->name('login');
 Route::get('/login', [LoginController::class, 'showLogin'])->name('login');
 Route::post('/login', [LoginController::class, 'login']);
 Route::post('/logout', [LoginController::class, 'logout']);
@@ -23,18 +25,15 @@ Route::resource('data-karyawan', DataKaryawanController::class);
 Route::resource('dokumen', DokumenController::class);
 Route::get('/dokumen/{id}/download', [DokumenController::class, 'download'])->name('dokumen.download');
 
+// Kehadiran CRUD routes
+Route::resource('kehadiran', KehadiranController::class);
+Route::get('/kehadiran/date/{tanggal}', [KehadiranController::class, 'getKehadiranByDate'])->name('kehadiran.by-date');
+
 Route::get('/riwayat-pekerjaan', function () {
     if (! session()->has('user_id') || !in_array(session('peran'), ['superadmin', 'admin'])) {
         return redirect('/dashboard')->with('error', 'Akses ditolak');
     }
     return view('pages.riwayat-pekerjaan');
-});
-
-Route::get('/kehadiran', function () {
-    if (! session()->has('user_id') || !in_array(session('peran'), ['superadmin', 'admin'])) {
-        return redirect('/dashboard')->with('error', 'Akses ditolak');
-    }
-    return view('pages.kehadiran');
 });
 
 // Karyawan routes

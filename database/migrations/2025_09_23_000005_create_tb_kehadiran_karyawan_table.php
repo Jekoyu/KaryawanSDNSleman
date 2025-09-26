@@ -13,6 +13,7 @@ return new class extends Migration
             $table->unsignedInteger('id_karyawan');
             $table->date('tanggal');
             $table->string('status')->nullable();
+            $table->text('keterangan')->nullable();
             $table->timestamps();
 
             $table->foreign('id_karyawan')->references('id_karyawan')->on('tb_data_karyawan')->onDelete('cascade');
