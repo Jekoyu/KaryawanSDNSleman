@@ -10,6 +10,8 @@ use App\Http\Controllers\KehadiranController;
 // Route::get('/', function () {
 //     return view('welcome');
 // });
+Route::get('/healthz', fn () => response('OK', 200));
+
 
 Route::get('/', [LoginController::class, 'showLogin'])->name('login');
 Route::get('/login', [LoginController::class, 'showLogin'])->name('login');
