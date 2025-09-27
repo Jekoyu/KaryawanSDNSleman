@@ -6,6 +6,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DataKaryawanController;
 use App\Http\Controllers\DokumenController;
 use App\Http\Controllers\KehadiranController;
+use App\Http\Controllers\RiwayatPekerjaanController;
 
 // Route::get('/', function () {
 //     return view('welcome');
@@ -34,12 +35,9 @@ Route::get('/dokumen/{id}/download', [DokumenController::class, 'download'])->na
 Route::resource('kehadiran', KehadiranController::class);
 Route::get('/kehadiran/date/{tanggal}', [KehadiranController::class, 'getKehadiranByDate'])->name('kehadiran.by-date');
 
-Route::get('/riwayat-pekerjaan', function () {
-    if (! session()->has('user_id') || !in_array(session('peran'), ['superadmin', 'admin'])) {
-        return redirect('/dashboard')->with('error', 'Akses ditolak');
-    }
-    return view('pages.riwayat-pekerjaan');
-});
+// Riwayat Pekerjaan CRUD routes
+Route::resource('riwayat-pekerjaan', RiwayatPekerjaanController::class);
+Route::get('/riwayat-pekerjaan/karyawan/{id}', [RiwayatPekerjaanController::class, 'getByKaryawan'])->name('riwayat-pekerjaan.by-karyawan');
 
 // Karyawan routes
 Route::get('/profil-saya', function () {
