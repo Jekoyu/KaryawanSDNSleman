@@ -31,8 +31,8 @@ jobs:
           platforms: linux/amd64
           push: true
           tags: |
-            ghcr.io/${{ github.repository_owner }}/karyawansdnsleman:latest
-            ghcr.io/${{ github.repository_owner }}/karyawansdnsleman:${{ github.sha }}
+            ghcr.io/jekoyu/karyawansdnsleman:latest
+            ghcr.io/jekoyu/karyawansdnsleman:${{ github.sha }}
 
 
   deploy:
