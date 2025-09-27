@@ -11,6 +11,9 @@ use App\Http\Controllers\KehadiranController;
 //     return view('welcome');
 // });
 Route::get('/healthz', fn () => response('OK', 200));
+Route::get('/debug-headers', function (\Illuminate\Http\Request $request) {
+    return response()->json($request->headers->all());
+});
 
 
 Route::get('/', [LoginController::class, 'showLogin'])->name('login');
