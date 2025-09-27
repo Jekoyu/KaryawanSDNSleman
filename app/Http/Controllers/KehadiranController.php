@@ -204,6 +204,29 @@ class KehadiranController extends Controller
         ];
     }
 
+    public function edit($id)
+    {
+        // Check if user is logged in and has proper role
+        if (! session()->has('user_id') || !in_array(session('peran'), ['superadmin', 'admin'])) {
+            return response()->json(['success' => false, 'message' => 'Akses ditolak'], 403);
+        }
+
+        try {
+            $kehadiran = KehadiranKaryawan::with('karyawan')->findOrFail($id);
+
+            return response()->json([
+                'success' => true,
+                'data' => $kehadiran
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Data kehadiran tidak ditemukan'
+            ], 404);
+        }
+    }
+
     public function update(Request $request, $id)
     {
         // Check if user is logged in and has proper role

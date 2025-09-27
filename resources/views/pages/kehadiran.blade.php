@@ -162,7 +162,7 @@
                                         <td class="p-4 align-middle text-muted-foreground">{{ $k->keterangan ?? '-' }}</td>
                                         <td class="p-4 align-middle">
                                             <div class="flex items-center space-x-1">
-                                                <button type="button" onclick="editKehadiran({{ $k->id_kehadiran }})" class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-8 w-8" title="Edit">
+                                                <button type="button" class="edit-btn inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-8 w-8" title="Edit" data-id="{{ $k->id_kehadiran }}">
                                                     <svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
                                                     </svg>
@@ -566,8 +566,102 @@ document.getElementById('filterBulan').addEventListener('change', function() {
 
 // Edit kehadiran function
 function editKehadiran(id) {
-    // Implementation for edit will be added based on specific requirements
-    console.log('Edit kehadiran:', id);
+    // Fetch kehadiran data
+    fetch(`/kehadiran/${id}/edit`, {
+        method: 'GET',
+        headers: {
+            'Accept': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            const kehadiran = data.data;
+            
+            // Fill edit form
+            document.getElementById('editKehadiranId').value = kehadiran.id_kehadiran;
+            document.getElementById('editStatus').value = kehadiran.status;
+            document.getElementById('editKeterangan').value = kehadiran.keterangan || '';
+            
+            // Show karyawan info
+            const karyawanInfo = document.getElementById('editKaryawanInfo');
+            karyawanInfo.innerHTML = `
+                <div class="flex items-center space-x-3">
+                    <div class="h-8 w-8 bg-blue-100 rounded-full flex items-center justify-center">
+                        <span class="text-xs font-medium text-blue-600">${kehadiran.karyawan.nama.split(' ').map(n => n.charAt(0)).join('').toUpperCase()}</span>
+                    </div>
+                    <div>
+                        <div class="font-medium">${kehadiran.karyawan.nama}</div>
+                        <div class="text-sm text-gray-500">${kehadiran.karyawan.jabatan || '-'}</div>
+                        <div class="text-sm text-gray-500">Tanggal: ${new Date(kehadiran.tanggal).toLocaleDateString('id-ID')}</div>
+                    </div>
+                </div>
+            `;
+            
+            // Show modal
+            showModal('editModal');
+        } else {
+            Swal.fire('Error!', data.message, 'error');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        Swal.fire('Error!', 'Terjadi kesalahan sistem', 'error');
+    });
 }
+
+// Handle edit form submission
+document.getElementById('editForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const formData = new FormData(this);
+    const id = document.getElementById('editKehadiranId').value;
+    
+    fetch(`/kehadiran/${id}`, {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            Swal.fire({
+                title: 'Berhasil!',
+                text: data.message,
+                icon: 'success',
+                confirmButtonText: 'OK'
+            }).then(() => {
+                closeModal('editModal');
+                window.location.reload();
+            });
+        } else {
+            let errorMessage = data.message || 'Terjadi kesalahan';
+            if (data.errors) {
+                errorMessage += '\n\nDetail error:\n';
+                Object.keys(data.errors).forEach(key => {
+                    errorMessage += `- ${data.errors[key].join(', ')}\n`;
+                });
+            }
+            Swal.fire('Error!', errorMessage, 'error');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        Swal.fire('Error!', 'Terjadi kesalahan sistem', 'error');
+    });
+});
+
+// Add event listeners for edit buttons
+document.addEventListener('click', function(e) {
+    if (e.target.closest('.edit-btn')) {
+        const button = e.target.closest('.edit-btn');
+        const id = button.getAttribute('data-id');
+        editKehadiran(id);
+    }
+});
 </script>
 @endsection
