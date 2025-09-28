@@ -46,7 +46,8 @@ class KehadiranKaryawan extends Model
             'sakit' => 'Sakit',
             'izin' => 'Izin',
             'alfa' => 'Alfa',
-            'cuti' => 'Cuti'
+            'cuti' => 'Cuti',
+            'libur' => 'Libur'
         ];
     }
 
@@ -60,6 +61,7 @@ class KehadiranKaryawan extends Model
             'izin' => 'bg-purple-100 text-purple-800',
             'alfa' => 'bg-red-100 text-red-800',
             'cuti' => 'bg-gray-100 text-gray-800',
+            'libur' => 'bg-orange-100 text-orange-800',
             default => 'bg-gray-100 text-gray-800'
         };
     }

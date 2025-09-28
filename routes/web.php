@@ -31,9 +31,13 @@ Route::resource('data-karyawan', DataKaryawanController::class);
 Route::resource('dokumen', DokumenController::class);
 Route::get('/dokumen/{id}/download', [DokumenController::class, 'download'])->name('dokumen.download');
 
+// Kehadiran specific routes (must be before resource routes)
+Route::get('/kehadiran/date/{tanggal}', [KehadiranController::class, 'getKehadiranByDate'])->name('kehadiran.by-date');
+Route::get('/kehadiran/monthly-report', [KehadiranController::class, 'getMonthlyReport'])->name('kehadiran.monthly-report');
+Route::post('/kehadiran/set-holiday', [KehadiranController::class, 'setHoliday'])->name('kehadiran.set-holiday');
+
 // Kehadiran CRUD routes
 Route::resource('kehadiran', KehadiranController::class);
-Route::get('/kehadiran/date/{tanggal}', [KehadiranController::class, 'getKehadiranByDate'])->name('kehadiran.by-date');
 
 // Riwayat Pekerjaan CRUD routes
 Route::resource('riwayat-pekerjaan', RiwayatPekerjaanController::class);
