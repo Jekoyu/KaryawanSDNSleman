@@ -31,6 +31,12 @@ class KehadiranKaryawan extends Model
         return $this->belongsTo(DataKaryawan::class, 'id_karyawan', 'id_karyawan');
     }
 
+    // Alias untuk relationship
+    public function dataKaryawan()
+    {
+        return $this->belongsTo(DataKaryawan::class, 'id_karyawan', 'id_karyawan');
+    }
+
     // Status options
     public static function getStatusOptions()
     {

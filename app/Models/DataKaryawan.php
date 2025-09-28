@@ -29,6 +29,18 @@ class DataKaryawan extends Model
         return $this->hasMany(RiwayatPekerjaan::class, 'id_karyawan', 'id_karyawan');
     }
 
+    // Relationship to BerkasKaryawan
+    public function berkasKaryawan()
+    {
+        return $this->hasMany(BerkasKaryawan::class, 'id_karyawan', 'id_karyawan');
+    }
+
+    // Relationship to KehadiranKaryawan
+    public function kehadiranKaryawan()
+    {
+        return $this->hasMany(KehadiranKaryawan::class, 'id_karyawan', 'id_karyawan');
+    }
+
     // Scope untuk karyawan aktif
     public function scopeAktif($query)
     {
